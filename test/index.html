@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+                    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<script src="../lib/jquery/jquery-1.6.4.min.js"></script>
+	<script type="text/javascript" src="../lib/qunit/qunit.js"></script>
+	<script type="text/javascript" src="../lib/highcharts/highcharts.js"></script>
+	<script type="text/javascript" src="../src/highcharts-extension.js"></script>
+
+	<link rel="stylesheet" href="../lib/qunit/qunit.css" type="text/css" media="screen" />
+
+
+  <script>
+	var chart;
+	var chart2;
+	$(document).ready(function(){
+		chart = new Highcharts.Chart({
+				chart: {
+					renderTo: 'container'
+				},
+				series: [{
+						data: [3, 1, 5, null, 8]
+					}, {
+						data: [15, 8, 4, 1, 9]
+					}]
+				});
+
+		chart2 = new Highcharts.Chart({
+				chart: {
+					renderTo: 'container2'
+				},
+				tooltip: {
+					formatter: function () {
+						HighchartsExtension.TooltipFormatter(this);
+						return Highcharts.numberFormat(this.chartPercentage, 2);
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true,
+							formatter: function() {
+								HighchartsExtension.TooltipFormatter(this);
+								return Highcharts.numberFormat(this.seriePercentage, 2);
+							}
+						}
+					}
+				},
+				series: [{
+						data: [3, 1, 5, null, 8]
+					}, {
+						data: [15, 8, 4, 1, 9]
+					}]
+				});
+// Calculate chart values
+test("HighchartsExtension.Preprocess", function() {
+	equal(HighchartsExtension.Preprocess(chart), true, "The first time, it calculate the values" );
+	equal(HighchartsExtension.Preprocess(chart), false, "The second time, it doesn't calculate the values" );
+});
+
+test("chart.chartTotal", function() {
+	  equal( chart.chartTotal, 54 );
+});
+test("chart.chartMean", function() {
+	equal( chart.chartMean, 54 / 9);
+});
+test("chart.totalPoints", function() {
+	equal( chart.totalPoints, 9);
+});
+test("chart.chartMin", function() {
+	equal( chart.chartMin, 1);
+});
+test("chart.chartMax", function() {
+	equal( chart.chartMax, 15);
+});
+
+test("chart.series[x].serieTotal", function() {
+	  equal( chart.series[0].serieTotal, 17);
+	  equal( chart.series[1].serieTotal, 37);
+});
+
+test("chart.series[x].serieMean", function() {
+	  equal( chart.series[0].serieMean, 17 / 4);
+	  equal( chart.series[1].serieMean, 37 / 5);
+});
+test("chart.series[x].totalPoints", function() {
+	  equal( chart.series[0].totalPoints, 4);
+	  equal( chart.series[1].totalPoints, 5);
+});
+test("chart.series[x].serieMin", function() {
+	  equal( chart.series[0].serieMin, 1);
+	  equal( chart.series[1].serieMin, 1);
+});
+test("chart.series[x].serieMax", function() {
+	  equal( chart.series[0].serieMax, 8);
+	  equal( chart.series[1].serieMax, 15);
+});
+
+
+// Calculate LegendLabelFormatter
+test("HighchartsExtension.LegendLabelFormatter", function() {
+	jQuery.each(chart.series, function(i) { 
+		equal(HighchartsExtension.LegendLabelFormatter(chart.series[i]), true, "The first time, it calculate the values" );
+	});
+	jQuery.each(chart.series, function(i) { 
+		equal(HighchartsExtension.LegendLabelFormatter(chart.series[i]), false, "The second time, it doesn't calculate the values" );
+	});
+});
+
+test("chart.series[x].chartPercentage", function() {
+	equal( chart.series[0].chartPercentage, 17 / 54 * 100);
+	equal( chart.series[1].chartPercentage, 37 / 54 * 100);
+});
+
+// Calculate TooltipFormatter && DataLabelFormatter
+test("chart2.series[x].data[0].chartPercentage", function() {
+	equal( chart2.series[0].data[0].chartPercentage, 3 / 54 * 100);
+});
+test("chart2.series[x].data[0].seriePercentage", function() {
+	equal( chart2.series[0].data[0].seriePercentage, 3 / 17 * 100);
+});
+test("chart2.series[x].data[0].pointTotal", function() {
+	equal( chart2.series[0].data[0].pointTotal, 18);
+});
+test("chart2.series[x].data[0].pointMin", function() {
+	equal( chart2.series[0].data[0].pointMin, 3);
+});
+test("chart2.series[x].data[0].pointMax", function() {
+	equal( chart2.series[0].data[0].pointMax, 15);
+});
+test("chart2.series[x].data[0].totalPoints", function() {
+	equal( chart2.series[0].data[0].totalPoints, 2);
+});
+test("chart2.series[x].data[0].pointMean", function() {
+	equal( chart2.series[0].data[0].pointMean, 18 / 2);
+});
+test("chart2.series[x].data[0].pointPercentage", function() {
+	equal( chart2.series[0].data[0].pointPercentage, 3 / 18 * 100);
+});
+
+  });
+  </script>
+  
+</head>
+<body>
+ <h1 id="qunit-header">QUnit example</h1>
+ <h2 id="qunit-banner"></h2>
+ <div id="qunit-testrunner-toolbar"></div>
+ <h2 id="qunit-userAgent"></h2>
+ <ol id="qunit-tests"></ol>
+ <div id="qunit-fixture">test markup, will be hidden</div>
+ <div id="container" style="display: none;"></div>
+ <div id="container2" style="display: none;"></div>
+</body>
+</html>

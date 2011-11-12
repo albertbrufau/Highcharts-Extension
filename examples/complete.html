@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Highcharts Extension - Complete example</title>
+		
+		<script type="text/javascript" src="../lib/jquery/jquery-1.6.4.min.js"></script>
+		<script type="text/javascript" src="../lib/highcharts/highcharts.js"></script>
+		<script type="text/javascript" src="../lib/highcharts/themes/grid.js"></script>
+		<script type="text/javascript" src="../build/highcharts-extension.compressed.js"></script>
+
+		<script type="text/javascript">
+		
+			var chart;
+			var DataLabelFunction = {
+							enabled: true,
+							formatter: function() {
+								HighchartsExtension.DataLabelFormatter(this);
+								return Highcharts.numberFormat(this.seriePercentage, 2) + '%';
+							},
+							rotation: -45,
+							align: 'left'
+						};
+			$(document).ready(function() {
+				chart = new Highcharts.Chart({
+					chart: {
+						renderTo: 'container',
+						defaultSeriesType: 'column',
+						marginTop: 130
+					},
+					title: {
+						text: 'Lionel Messi'
+					},
+					subtitle: {
+						text: 'FCB Goals (2004-2011) - <a href="http://en.wikipedia.org/wiki/Lionel_Messi#Career_statistics">Source Wikipedia</a>'
+					},
+					xAxis: {
+						categories: [
+							'2004-2005', 
+							'2005-2006', 
+							'2006-2007', 
+							'2007-2008', 
+							'2008-2009', 
+							'2009-2010', 
+							'2010-2011',
+							'2011-2012 (Current)'
+						],
+						labels: {
+							rotation: -45,
+							align: 'right'
+						}
+					},
+					yAxis: {
+						title: {
+							text: 'Goals'
+						}
+					},
+					legend: {
+						layout: 'vertical',
+						backgroundColor: '#FFFFFF',
+						align: 'left',
+						verticalAlign: 'top',
+						x: 75,
+						y: 70,
+						floating: true,
+						shadow: true,
+						labelFormatter: function() {
+							HighchartsExtension.LegendFormatter(this);
+							return 'Total goals: <b>' + this.serieTotal + 
+								'</b> Min/Max: ' + this.serieMin + '/' + this.serieMax + ' - ' + '<b>' + 
+								this.name + '</b> ' + Highcharts.numberFormat(this.chartPercentage, 2) + '% of <b>' + 
+								this.chart.chartTotal + '</b>';
+						}
+					},
+					tooltip: {
+						formatter: function() {
+							HighchartsExtension.TooltipFormatter(this);
+							return 'Season ' + this.x + '<br/>Total: <b>' + this.pointTotal + '</b><br/>' + this.series.name + 
+								': <b>'+ this.y + '</b> goals' + 
+								' (' + Highcharts.numberFormat(this.pointPercentage, 2) + '% of season)';
+						}
+					},
+					plotOptions: {
+						column: {
+							pointPadding: 0.2,
+							borderWidth: 0
+						}
+					},
+				    series: [{
+						name:'League',
+						data: [1, 6, 14, 10, 23, 34, 31, 13],
+						dataLabels: DataLabelFunction
+					}, {
+						name:'Cup',
+						data: [0, 1, 2, 0, 6, 1, 7, 0],
+						dataLabels: DataLabelFunction
+					}, {
+						name:'Champions League',
+						data: [0, 1, 1, 6, 9, 8, 12, 5],
+						dataLabels: DataLabelFunction
+					}, {
+						name:'Supercup',
+						data: [0, 0, 0, 0, 0, 2, 3, 3],
+						dataLabels: DataLabelFunction
+					}, {
+						name:'UEFA Super Cup',
+						data: [0, 0, 0, 0, 0, 0, 0, 1],
+						dataLabels: DataLabelFunction
+					}, {
+						name:'Club World Cup',
+						data: [0, 0, 0, 0, 0, 2, 0, 0],
+						dataLabels: DataLabelFunction
+					}]
+				}, 
+				// There isn't any title formatting function, I change it after drawing the chart
+				function(chart){
+					chart.setTitle({text: chart.options.title.text + ' Total goals: ' + chart.chartTotal});
+				});
+			});	
+		</script>
+		
+	</head>
+	<body>
+		
+		<div id="container" style="width: 100%; height: 600px; margin: 0 auto"></div>
+				
+	</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Highcharts Extension - Column example</title>
+		
+		<script type="text/javascript" src="../lib/jquery/jquery-1.6.4.min.js"></script>
+		<script type="text/javascript" src="../lib/highcharts/highcharts.js"></script>
+		<script type="text/javascript" src="../lib/highcharts/themes/grid.js"></script>
+		<script type="text/javascript" src="../build/highcharts-extension.compressed.js"></script>
+
+		<script type="text/javascript">
+		
+			var chart;
+			$(document).ready(function() {
+				chart = new Highcharts.Chart({
+					chart: {
+						renderTo: 'container',
+						defaultSeriesType: 'column'
+					},
+					title: {
+						text: 'Average Barcelona\'s rainfall'
+					},
+					xAxis: {
+						categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+							'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+					},
+					yAxis: {
+						title: {
+							text: 'mm'
+						}
+					},
+					legend: {
+						labelFormatter: function(){
+							HighchartsExtension.LegendLabelFormatter(this);
+							return 'Monthly mean: ' + this.serieMean + 'mm';
+						}
+					},
+					plotOptions: {
+						column: {
+							dataLabels: {
+								enabled: true,
+								y: -20,
+								formatter: function() {
+									HighchartsExtension.DataLabelFormatter(this);
+									return this.y + 'mm' + '<br/>' + Highcharts.numberFormat(this.seriePercentage, 2) + '%';
+								}
+							}
+						}
+					},
+					series: [{
+						name: 'Rainfall',
+						data: [116, 91, 72, 94, 79, 41, 50, 58, 72, 101, 147, 108]
+					}]
+				});
+			});	
+		</script>
+		
+	</head>
+	<body>
+		
+		<div id="container" style="width: 100%; height: 600px; margin: 0 auto"></div>
+				
+	</body>
+</html>
