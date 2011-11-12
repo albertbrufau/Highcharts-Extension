@@ -44,6 +44,7 @@ It adds following information to the objects:
 
 
 Object Chart:
+
 * chartTotal: Sum of all chart's values
 * chartMean: Mean of all chart
 * chartPonints: The number of chart's values
@@ -51,6 +52,7 @@ Object Chart:
 * chartMax: The maximum chart's value
 
 Object Serie:
+
 * serieTotal: Sum of all serie's values
 * serieMean: Mean of all serie
 * seriePonints: The number of serie's values
@@ -59,6 +61,7 @@ Object Serie:
 * chartPercentage: The weight (in %) in the chart
 
 Object Point:
+
 * pointTotal: Sum of all x-axis point's values
 * pointMean: Mean of all x-axis point
 * totalPoints: The number of x-axis point's values
